@@ -1,0 +1,28 @@
+import React from "react";
+import classNames from "classnames";
+
+export default function SearchInput({
+  value,
+  onChange,
+  isInvalid = false,
+  placeholder = "Filter podcasts...",
+}) {
+  const handleChange = (e) => onChange(e.target.value);
+
+  return (
+    <label className="block w-64">
+      <span className="sr-only">Search</span>
+      <input
+        className={classNames(
+          "placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 px-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm",
+          { "focus:border-red-500 focus:ring-red-500": isInvalid }
+        )}
+        placeholder={placeholder}
+        type="text"
+        name="search"
+        value={value}
+        onChange={handleChange}
+      />
+    </label>
+  );
+}
