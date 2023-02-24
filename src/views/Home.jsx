@@ -22,10 +22,8 @@ export default function Home() {
     if (query !== "") {
       const filteredData = podcasts.filter((podcast) => {
         return (
-          podcast["im:name"].label
-            .toLowerCase()
-            .includes(query.toLowerCase()) ||
-          podcast["im:artist"].label.toLowerCase().includes(query.toLowerCase())
+          podcast.name.toLowerCase().includes(query.toLowerCase()) ||
+          podcast.artist.toLowerCase().includes(query.toLowerCase())
         );
       });
       setFilteredPodcasts(filteredData);
@@ -55,7 +53,7 @@ export default function Home() {
       )}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 gap-y-14 mt-14">
         {filteredPodcasts.map((podcast) => (
-          <PodcastCard podcast={podcast} key={podcast.id.attributes["im:id"]} />
+          <PodcastCard podcast={podcast} key={podcast.id} />
         ))}
       </div>
     </>
