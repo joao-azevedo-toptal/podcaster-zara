@@ -1,13 +1,26 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { selectPodcastEpisodeById } from "../store/podcastsReducer";
+import {
+  getPodcastEpisodesList,
+  selectPodcastEpisodeById,
+} from "../store/podcastsReducer";
 
 export default function Episode() {
-  const { episodeId } = useParams();
+  const { podcastId, episodeId } = useParams();
+
   const episode = useSelector((state) =>
     selectPodcastEpisodeById(state, episodeId)
   );
+
+  const episodes = useSelector((state) => state.podcasts.episodes);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Simple way to allow to refresh on this route
+    if (!episodes || !episodes.length)
+      dispatch(getPodcastEpisodesList(podcastId));
+  }, []);
 
   return (
     <div className="card">

@@ -2,13 +2,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getPodcastEpisodes, getPodcasts } from "../api/podcastsAPI";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
+import { writeToLocalStorage } from "../utils/localStorage";
+import { addErrorMessages } from "./notificationsReducer";
 momentDurationFormatSetup(moment);
 
 const initialState = {
   podcasts: [],
   episodes: [],
-  isLoading: false,
-  errorMessage: "",
+  isLoadingPodcasts: false,
+  isLoadingEpisodes: false,
+  hasError: false,
 };
 
 export const selectPodcastById = (state, id) =>
@@ -21,25 +24,81 @@ export const getPodcastsList = createAsyncThunk(
   "podcasts/getPodcastsList",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await getPodcasts();
-      return data;
+      const { config, data, localStorageValue } = await getPodcasts();
+
+      if (localStorageValue) return localStorageValue.data;
+
+      const podcasts = data?.feed?.entry?.map((podcast) => ({
+        id: podcast.id.attributes["im:id"],
+        name: podcast["im:name"].label,
+        image: podcast["im:image"][2].label,
+        summary: podcast.summary.label,
+        artist: podcast["im:artist"].label,
+      }));
+      writeToLocalStorage(config.url, podcasts);
+
+      return podcasts;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error.message);
     }
+  },
+  {
+    // Prevent requesting twice
+    condition: (_, { getState }) => {
+      const { podcasts } = getState();
+      const isLoadingPodcasts = podcasts.isLoadingPodcasts;
+      if (isLoadingPodcasts) {
+        return false;
+      }
+    },
   }
 );
 
 export const getPodcastEpisodesList = createAsyncThunk(
   "podcasts/getPodcastEpisodesList",
-  async (podcastId, { rejectWithValue }) => {
+  async (podcastId, { rejectWithValue, dispatch }) => {
     try {
-      const { data } = await getPodcastEpisodes(podcastId);
-      return data;
+      const { config, data, localStorageValue } = await getPodcastEpisodes(
+        podcastId
+      );
+
+      if (localStorageValue) return localStorageValue.data;
+
+      // Remove first item (it's not a episode)
+      data?.results?.shift();
+
+      const episodes = data?.results?.map((episode) => ({
+        trackId: episode.trackId.toString(),
+        trackName: episode.trackName,
+        description: episode.description,
+        releaseDate: moment(episode.releaseDate).format("D/M/YYYY"),
+        trackTime: moment
+          .duration(episode.trackTimeMillis, "milliseconds")
+          .format("hh:mm:ss"),
+        episodeUrl: episode.episodeUrl,
+        episodeType: `${episode?.episodeContentType}/${episode?.episodeFileExtension}`,
+      }));
+      if (episodes?.length) writeToLocalStorage(config.url, episodes);
+
+      if (!episodes?.length) dispatch(addErrorMessages("No episodes found!"));
+
+      return episodes;
     } catch (error) {
       console.log(error);
+      dispatch(addErrorMessages(error.message));
       return rejectWithValue(error.message);
     }
+  },
+  {
+    // Prevent requesting twice
+    condition: (_, { getState }) => {
+      const { podcasts } = getState();
+      const isLoadingEpisodes = podcasts.isLoadingEpisodes;
+      if (isLoadingEpisodes) {
+        return false;
+      }
+    },
   }
 );
 
@@ -47,57 +106,37 @@ export const podcastsReducer = createSlice({
   name: "podcasts",
   initialState,
   reducers: {
-    setLoading: (state, action) => {
-      state.loading = action.payload;
+    clearHasError: (state) => {
+      state.hasError = false;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getPodcastsList.pending, (state) => {
-      state.isLoading = true;
+      state.isLoadingPodcasts = true;
     });
     builder.addCase(getPodcastsList.fulfilled, (state, { payload }) => {
-      state.isLoading = false;
-
-      state.podcasts = payload?.feed?.entry?.map((entry) => ({
-        id: entry.id.attributes["im:id"],
-        name: entry["im:name"].label,
-        image: entry["im:image"][2].label,
-        summary: entry.summary.label,
-        artist: entry["im:artist"].label,
-      }));
+      state.isLoadingPodcasts = false;
+      state.podcasts = payload;
     });
     builder.addCase(getPodcastsList.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      state.errorMessage = payload;
+      state.isLoadingPodcasts = false;
+      state.hasError = true;
     });
     builder.addCase(getPodcastEpisodesList.pending, (state) => {
-      state.isLoading = true;
+      state.isLoadingEpisodes = true;
     });
     builder.addCase(getPodcastEpisodesList.fulfilled, (state, { payload }) => {
-      state.isLoading = false;
-
-      // Remove first item (it's not a episode)
-      payload?.results?.shift();
-
-      state.episodes = payload?.results?.map((result) => ({
-        trackId: result.trackId.toString(),
-        trackName: result.trackName,
-        description: result.description,
-        releaseDate: moment(result.releaseDate).format("D/M/YYYY"),
-        trackTime: moment
-          .duration(result.trackTimeMillis, "milliseconds")
-          .format("hh:mm:ss"),
-        episodeUrl: result.episodeUrl,
-        episodeType: `${result?.episodeContentType}/${result?.episodeFileExtension}`,
-      }));
+      state.isLoadingEpisodes = false;
+      state.episodes = payload;
+      if (!payload || !payload.length) state.hasError = true;
     });
     builder.addCase(getPodcastEpisodesList.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      state.errorMessage = payload;
+      state.isLoadingEpisodes = false;
+      state.hasError = true;
     });
   },
 });
 
-export const { setLoading } = podcastsReducer.actions;
+export const { clearHasError } = podcastsReducer.actions;
 
 export default podcastsReducer.reducer;

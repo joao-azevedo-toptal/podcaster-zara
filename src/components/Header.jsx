@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 import Spinner from "./Spinner";
 
 export default function Header() {
-  const isLoading = useSelector((state) => state.podcasts.isLoading);
+  const isLoading = useSelector(
+    (state) =>
+      state.podcasts.isLoadingPodcasts || state.podcasts.isLoadingEpisodes
+  );
 
   return (
     <>

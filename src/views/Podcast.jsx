@@ -1,11 +1,19 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useParams } from "react-router-dom";
-import { selectPodcastById } from "../store/podcastsReducer";
+import { getPodcastsList, selectPodcastById } from "../store/podcastsReducer";
 
 export default function Podcast() {
   const { podcastId } = useParams();
   const podcast = useSelector((state) => selectPodcastById(state, podcastId));
+
+  const podcasts = useSelector((state) => state.podcasts.podcasts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Simple way to allow to refresh on this route
+    if (!podcasts || !podcasts.length) dispatch(getPodcastsList());
+  }, []);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-8 gap-14">
