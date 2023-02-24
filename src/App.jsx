@@ -9,12 +9,9 @@ import Episode from "./views/Episode";
 
 export default function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Header />
-        <Link to="/">Home</Link>
-        <Link to="/podcast/1">Podcast</Link>
-        <Link to="/podcast/1/episode/1">Episode</Link>
+    <BrowserRouter>
+      <Header />
+      <div className="md:container md:mx-auto px-3 py-6">
         <Routes>
           <Route exact path="/" element={<Home />}></Route>
           <Route exact path="/podcast/:podcastId" element={<Podcast />}></Route>
@@ -24,7 +21,7 @@ export default function App() {
             element={<Episode />}
           ></Route>
         </Routes>
-      </BrowserRouter>
-    </div>
+      </div>
+    </BrowserRouter>
   );
 }
