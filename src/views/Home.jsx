@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 
-import { getPodcasts } from "../api/podcastsAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { getPodcastsList } from "../store/podcastsReducer";
 
 import SearchInput from "../components/SearchInput";
 import Badge from "../components/Badge";
 import PodcastCard from "../components/PodcastCard";
 
 export default function Home() {
+  const podcasts = useSelector((state) => state.podcasts.podcasts);
+  const dispatch = useDispatch();
+
   const [query, setQuery] = useState("");
-  const [podcasts, setPodcasts] = useState([]);
   const [filteredPodcasts, setFilteredPodcasts] = useState([]);
 
   useEffect(() => {
-    getPodcasts().then((result) => setPodcasts(result.data.feed.entry));
+    dispatch(getPodcastsList());
   }, []);
 
   useEffect(() => {
