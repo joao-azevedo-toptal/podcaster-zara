@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
+import Header from "./components/Header";
+
 import Home from "./views/Home";
 import Podcast from "./views/Podcast";
 import Episode from "./views/Episode";
@@ -9,6 +11,7 @@ export default function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <Header />
         <Link to="/">Home</Link>
         <Link to="/podcast/1">Podcast</Link>
         <Link to="/podcast/1/episode/1">Episode</Link>
