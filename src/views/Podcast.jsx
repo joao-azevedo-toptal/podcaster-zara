@@ -8,9 +8,9 @@ export default function Podcast() {
   const podcast = useSelector((state) => selectPodcastById(state, podcastId));
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-5  gap-14">
-      <div className="col-span-1">
-        <div className="card max-w-xs mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-8 gap-14">
+      <div className="col-span-1 lg:col-span-2">
+        <div className="card max-w-xs mx-auto lg:max-w-none lg:mx-0">
           <img className="rounded mx-auto" src={podcast?.image} />
           <hr className="my-5" />
           <div className="font-bold">{podcast?.name}</div>
@@ -24,7 +24,7 @@ export default function Podcast() {
           </div>
         </div>
       </div>
-      <div className="col-span-1 lg:col-span-4">
+      <div className="col-span-1 lg:col-span-4 xl:col-span-6">
         <Outlet />
       </div>
     </div>

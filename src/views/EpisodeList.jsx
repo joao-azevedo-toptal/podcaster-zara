@@ -14,7 +14,7 @@ export default function EpisodeList() {
 
   return (
     <>
-      <div className="card text-2xl font-bold">Episodes: {episodes.lenght}</div>
+      <div className="card text-2xl font-bold">Episodes: {episodes.length}</div>
       <div className="card mt-7">
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left text-neutral-700">

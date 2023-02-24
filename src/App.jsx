@@ -12,7 +12,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Header />
-      <div className="md:container md:mx-auto px-3 py-6">
+      <div className="md:container md:mx-auto px-3 pt-6 pb-16">
         <Routes>
           <Route exact path="/" element={<Home />}></Route>
           <Route exact path="/podcast/:podcastId/*" element={<Podcast />}>

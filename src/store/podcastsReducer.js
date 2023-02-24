@@ -14,6 +14,9 @@ const initialState = {
 export const selectPodcastById = (state, id) =>
   state.podcasts.podcasts?.find((podcast) => podcast.id === id);
 
+export const selectPodcastEpisodeById = (state, id) =>
+  state.podcasts.episodes?.find((episode) => episode.trackId === id);
+
 export const getPodcastsList = createAsyncThunk(
   "podcasts/getPodcastsList",
   async (_, { rejectWithValue }) => {
@@ -73,14 +76,19 @@ export const podcastsReducer = createSlice({
     builder.addCase(getPodcastEpisodesList.fulfilled, (state, { payload }) => {
       state.isLoading = false;
 
+      // Remove first item (it's not a episode)
+      payload?.results?.shift();
+
       state.episodes = payload?.results?.map((result) => ({
-        trackId: result.trackId,
+        trackId: result.trackId.toString(),
         trackName: result.trackName,
         description: result.description,
         releaseDate: moment(result.releaseDate).format("D/M/YYYY"),
         trackTime: moment
           .duration(result.trackTimeMillis, "milliseconds")
           .format("hh:mm:ss"),
+        episodeUrl: result.episodeUrl,
+        episodeType: `${result?.episodeContentType}/${result?.episodeFileExtension}`,
       }));
     });
     builder.addCase(getPodcastEpisodesList.rejected, (state, { payload }) => {

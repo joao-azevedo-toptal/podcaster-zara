@@ -8,6 +8,6 @@ export const getPodcasts = () => {
 
 export const getPodcastEpisodes = (id) => {
   return axios.get(`${baseUrl}/lookup/json`, {
-    params: { id: id, entity: "podcastEpisode" },
+    params: { id: id, entity: "podcastEpisode", limit: 100 },
   });
 };
