@@ -8,6 +8,7 @@ export default function Badge({ value, isInvalid = false }) {
         "flex items-center bg-blue-500 text-white text-lg font-bold mr-2 px-2.5 py-0.5 rounded h-7",
         { "bg-red-500": isInvalid }
       )}
+      role="badge"
     >
       {value}
     </span>

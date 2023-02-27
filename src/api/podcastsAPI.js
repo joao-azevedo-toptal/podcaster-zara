@@ -10,7 +10,7 @@ export const getPodcasts = () => {
 
   const localStorageValue = readFromLocalStorage(url);
   if (localStorageValue)
-    return new Promise((resolve, reject) => resolve({ localStorageValue }));
+    return new Promise((resolve, _reject) => resolve({ localStorageValue }));
 
   return axios.get(url);
 };
@@ -21,7 +21,7 @@ export const getPodcastEpisodes = (id) => {
 
   const localStorageValue = readFromLocalStorage(url);
   if (localStorageValue)
-    return new Promise((resolve, reject) => resolve({ localStorageValue }));
+    return new Promise((resolve, _reject) => resolve({ localStorageValue }));
 
   return axios.get(url);
 };

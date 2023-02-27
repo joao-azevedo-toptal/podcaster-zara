@@ -27,7 +27,10 @@ export default function NotificationsManager() {
   };
 
   return (
-    <div className="fixed right-10 top-20 max-w-xs w-full z-50">
+    <div
+      className="fixed right-10 top-20 max-w-xs w-full z-50"
+      data-testid="notifications-manager"
+    >
       {errorMessages.map((message, index) => (
         <Notification
           message={message}

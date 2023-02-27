@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Header from "./components/Header";
 
@@ -12,7 +12,7 @@ import NotificationsManager from "./components/NotificationsManager";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <>
       <Header />
       <NotificationsManager />
       <div className="md:container md:mx-auto px-3 pt-6 pb-16">
@@ -34,6 +34,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </>
   );
 }

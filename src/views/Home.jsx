@@ -51,7 +51,7 @@ export default function Home() {
           No podcast results for "{query}"
         </div>
       )}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 gap-y-14 mt-14">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 gap-y-14 mt-14">
         {filteredPodcasts.map((podcast) => (
           <PodcastCard podcast={podcast} key={podcast.id} />
         ))}

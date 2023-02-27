@@ -1,11 +1,16 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import podcastsReducer from "./podcastsReducer";
 import notificationsReducer from "./notificationsReducer";
 
-export const store = configureStore({
-  reducer: {
-    podcasts: podcastsReducer,
-    notifications: notificationsReducer,
-  },
-  devTools: true,
+const rootReducer = combineReducers({
+  podcasts: podcastsReducer,
+  notifications: notificationsReducer,
 });
+
+export const setupStore = (preloadedState) => {
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+    devTools: true,
+  });
+};
