@@ -6,6 +6,7 @@ export default function Notification({ message, onClose }) {
     <div
       className="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow"
       role="alert"
+      data-testid="notification"
     >
       <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-red-100 rounded-lg">
         <WarningIcon className="text-red-500" />

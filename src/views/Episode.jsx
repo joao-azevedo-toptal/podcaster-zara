@@ -24,26 +24,32 @@ export default function Episode() {
   }, []);
 
   return (
-    <div className="card">
-      <div className="text-3xl font-semibold">
-        {episode?.trackName || <WarningIcon className="text-red-500 w-7 h-7" />}
-      </div>
-      {episode?.description ? (
-        <div
-          className="html-description whitespace-pre-line py-3 text-sm text-neutral-700"
-          dangerouslySetInnerHTML={{ __html: episode?.description }}
-        />
-      ) : (
-        <WarningIcon className="text-red-500" />
+    <>
+      {episode && (
+        <div className="card" data-testid="episode-details-card">
+          <div className="text-3xl font-semibold">
+            {episode?.trackName || (
+              <WarningIcon className="text-red-500 w-7 h-7" />
+            )}
+          </div>
+          {episode?.description ? (
+            <div
+              className="html-description whitespace-pre-line py-3 text-sm text-neutral-700"
+              dangerouslySetInnerHTML={{ __html: episode?.description }}
+            />
+          ) : (
+            <WarningIcon className="text-red-500" />
+          )}
+          <hr className="my-5" />
+          {episode?.episodeUrl ? (
+            <audio className="w-full" controls>
+              <source src={episode?.episodeUrl} type={episode?.episodeType} />
+            </audio>
+          ) : (
+            <WarningIcon className="text-red-500" />
+          )}
+        </div>
       )}
-      <hr className="my-5" />
-      {episode?.episodeUrl ? (
-        <audio className="w-full" controls>
-          <source src={episode?.episodeUrl} type={episode?.episodeType} />
-        </audio>
-      ) : (
-        <WarningIcon className="text-red-500" />
-      )}
-    </div>
+    </>
   );
 }

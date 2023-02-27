@@ -28,8 +28,9 @@ export const selectPodcastEpisodeById = (state, id) =>
 
 export const getPodcastsList = createAsyncThunk(
   "podcasts/getPodcastsList",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
+      dispatch(resetPodcasts());
       const { config, data, localStorageValue } = await getPodcasts();
 
       if (localStorageValue) return localStorageValue.data;
@@ -65,6 +66,7 @@ export const getPodcastEpisodesList = createAsyncThunk(
   "podcasts/getPodcastEpisodesList",
   async (podcastId, { rejectWithValue, dispatch, getState }) => {
     try {
+      dispatch(resetEpisodes());
       const state = getState();
       if (state.app.useFeedUrl) {
         const { config, data, localStorageValue } =
@@ -75,6 +77,8 @@ export const getPodcastEpisodesList = createAsyncThunk(
         if (!localStorageValue && feedUrl) {
           writeToLocalStorage(config.url, { feedUrl });
         }
+
+        if (!feedUrl) throw Error("Error geting the feed URL!");
 
         const { data: feedXML, localStorageValue: feedLocalStorageValue } =
           await getPodcastFeedUrlResultsInXML(feedUrl);
@@ -160,6 +164,12 @@ export const podcastsReducer = createSlice({
     clearHasError: (state) => {
       state.hasError = false;
     },
+    resetPodcasts: (state) => {
+      state.podcasts = [];
+    },
+    resetEpisodes: (state) => {
+      state.episodes = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getPodcastsList.pending, (state) => {
@@ -188,6 +198,7 @@ export const podcastsReducer = createSlice({
   },
 });
 
-export const { clearHasError } = podcastsReducer.actions;
+export const { clearHasError, resetPodcasts, resetEpisodes } =
+  podcastsReducer.actions;
 
 export default podcastsReducer.reducer;

@@ -17,7 +17,11 @@ export default function Header() {
         className="flex justify-between items-center md:container md:mx-auto px-2 py-2"
         data-testid="header"
       >
-        <Link to="/" className="text-lg font-bold text-blue-700">
+        <Link
+          to="/"
+          className="text-lg font-bold text-blue-700"
+          data-testid="home-link"
+        >
           Podcaster
         </Link>
 
