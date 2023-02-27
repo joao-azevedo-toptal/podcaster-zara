@@ -30,6 +30,10 @@ To run the project in production, follow these steps:
 - Run `npm run build` to generate the files in `./build` folder
 - Run `npm run preview` to serve the files generated in the previous step
 
+### Tests
+
+To run the unit tests run `npm run test`
+
 ## Tools
 
 Some of the tools used in this project are:
@@ -39,9 +43,18 @@ Some of the tools used in this project are:
 - Redux for state management
 - Axios for requests handling
 - Tailwind for styling
+- Vitest for unit tests
 
 For a more detailed list take a look at the `package.json`
 
 ## Mobile Support
 
 The web app is compatible with devices of all sizes.
+
+## Screenshots
+
+![Podcasts](./images/podcasts.png)
+
+![Episodes List](./images/episode-list.png)
+
+![Episode Details](./images/episode-details.png)
