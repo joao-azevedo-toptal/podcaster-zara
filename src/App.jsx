@@ -9,6 +9,7 @@ import EpisodeList from "./views/EpisodeList";
 import Episode from "./views/Episode";
 
 import NotificationsManager from "./components/NotificationsManager";
+import DelayedView from "./views/DelayedView";
 
 export default function App() {
   return (
@@ -17,8 +18,24 @@ export default function App() {
       <NotificationsManager />
       <div className="md:container md:mx-auto px-3 pt-6 pb-16">
         <Routes>
-          <Route exact path="/" element={<Home />}></Route>
-          <Route exact path="/podcast/:podcastId/*" element={<Podcast />}>
+          <Route
+            exact
+            path="/"
+            element={
+              <DelayedView>
+                <Home />
+              </DelayedView>
+            }
+          ></Route>
+          <Route
+            exact
+            path="/podcast/:podcastId/*"
+            element={
+              <DelayedView>
+                <Podcast />
+              </DelayedView>
+            }
+          >
             <Route
               exact
               path="/podcast/:podcastId/*"
