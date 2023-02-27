@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import WarningIcon from "../components/WarningIcon";
 import {
   getPodcastEpisodesList,
   selectPodcastEpisodeById,
@@ -24,16 +25,24 @@ export default function Episode() {
 
   return (
     <div className="card">
-      <div className="text-3xl font-semibold">{episode?.trackName}</div>
-      <div
-        className="whitespace-pre-line py-3 text-sm text-neutral-700"
-        dangerouslySetInnerHTML={{ __html: episode?.description }}
-      />
+      <div className="text-3xl font-semibold">
+        {episode?.trackName || <WarningIcon className="text-red-500 w-7 h-7" />}
+      </div>
+      {episode?.description ? (
+        <div
+          className="html-description whitespace-pre-line py-3 text-sm text-neutral-700"
+          dangerouslySetInnerHTML={{ __html: episode?.description }}
+        />
+      ) : (
+        <WarningIcon className="text-red-500" />
+      )}
       <hr className="my-5" />
-      {episode?.episodeUrl && (
+      {episode?.episodeUrl ? (
         <audio className="w-full" controls>
           <source src={episode?.episodeUrl} type={episode?.episodeType} />
         </audio>
+      ) : (
+        <WarningIcon className="text-red-500" />
       )}
     </div>
   );

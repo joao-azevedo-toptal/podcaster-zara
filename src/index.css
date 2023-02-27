@@ -9,4 +9,7 @@
     padding: theme("spacing.5");
     box-shadow: theme("boxShadow.DEFAULT");
   }
+  .html-description a {
+    @apply text-blue-600 hover:underline;
+  }
 }

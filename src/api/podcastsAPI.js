@@ -25,3 +25,22 @@ export const getPodcastEpisodes = (id) => {
 
   return axios.get(url);
 };
+
+export const getPodcastEpisodesInfo = (id) => {
+  const params = { id: id };
+  const url = axios.getUri({ url: `${baseUrl}/lookup/json`, params });
+
+  const localStorageValue = readFromLocalStorage(url);
+  if (localStorageValue)
+    return new Promise((resolve, _reject) => resolve({ localStorageValue }));
+
+  return axios.get(url);
+};
+
+export const getPodcastFeedUrlResultsInXML = (feedUrl) => {
+  const localStorageValue = readFromLocalStorage(feedUrl);
+  if (localStorageValue)
+    return new Promise((resolve, _reject) => resolve({ localStorageValue }));
+
+  return axios.get(feedUrl);
+};

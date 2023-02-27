@@ -1,4 +1,5 @@
 import React from "react";
+import WarningIcon from "./WarningIcon";
 
 export default function Notification({ message, onClose }) {
   return (
@@ -6,22 +7,8 @@ export default function Notification({ message, onClose }) {
       className="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow"
       role="alert"
     >
-      <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg">
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-          ></path>
-        </svg>
+      <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-red-100 rounded-lg">
+        <WarningIcon className="text-red-500" />
       </div>
       <div className="ml-3 text-sm font-normal">{message}</div>
       <button

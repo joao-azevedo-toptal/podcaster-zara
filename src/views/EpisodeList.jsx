@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import WarningIcon from "../components/WarningIcon";
 import { getPodcastEpisodesList } from "../store/podcastsReducer";
 
 export default function EpisodeList() {
@@ -38,15 +39,33 @@ export default function EpisodeList() {
                   key={episode.trackId}
                 >
                   <td className="px-6 py-4">
-                    <Link
-                      to={`episode/${episode.trackId}`}
-                      className="font-medium text-blue-600 hover:underline"
-                    >
-                      {episode.trackName}
-                    </Link>
+                    {episode.trackId ? (
+                      <Link
+                        to={`episode/${encodeURIComponent(episode.trackId)}`}
+                        className="font-medium text-blue-600 hover:underline"
+                      >
+                        {episode.trackName || (
+                          <WarningIcon className="text-red-500" />
+                        )}
+                      </Link>
+                    ) : (
+                      <>
+                        {episode.trackName || (
+                          <WarningIcon className="text-red-500" />
+                        )}
+                      </>
+                    )}
                   </td>
-                  <td className="px-6 py-4">{episode.releaseDate}</td>
-                  <td className="px-6 py-4 text-right">{episode.trackTime}</td>
+                  <td className="px-6 py-4">
+                    {episode.releaseDate || (
+                      <WarningIcon className="text-red-500" />
+                    )}
+                  </td>
+                  <td className="px-6 py-4 flex justify-end">
+                    {episode.trackTime || (
+                      <WarningIcon className="text-red-500" />
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

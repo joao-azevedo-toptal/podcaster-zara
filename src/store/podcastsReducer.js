@@ -1,9 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getPodcastEpisodes, getPodcasts } from "../api/podcastsAPI";
+import {
+  getPodcastEpisodes,
+  getPodcastEpisodesInfo,
+  getPodcastFeedUrlResultsInXML,
+  getPodcasts,
+} from "../api/podcastsAPI";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 import { writeToLocalStorage } from "../utils/localStorage";
 import { addErrorMessages } from "./notificationsReducer";
+import { XMLParser } from "fast-xml-parser";
 momentDurationFormatSetup(moment);
 
 const initialState = {
@@ -57,33 +63,78 @@ export const getPodcastsList = createAsyncThunk(
 
 export const getPodcastEpisodesList = createAsyncThunk(
   "podcasts/getPodcastEpisodesList",
-  async (podcastId, { rejectWithValue, dispatch }) => {
+  async (podcastId, { rejectWithValue, dispatch, getState }) => {
     try {
-      const { config, data, localStorageValue } = await getPodcastEpisodes(
-        podcastId
-      );
+      const state = getState();
+      if (state.app.useFeedUrl) {
+        const { config, data, localStorageValue } =
+          await getPodcastEpisodesInfo(podcastId);
 
-      if (localStorageValue) return localStorageValue.data;
+        const feedUrl =
+          data?.results[0]?.feedUrl || localStorageValue?.data?.feedUrl;
+        if (!localStorageValue && feedUrl) {
+          writeToLocalStorage(config.url, { feedUrl });
+        }
 
-      // Remove first item (it's not a episode)
-      data?.results?.shift();
+        const { data: feedXML, localStorageValue: feedLocalStorageValue } =
+          await getPodcastFeedUrlResultsInXML(feedUrl);
 
-      const episodes = data?.results?.map((episode) => ({
-        trackId: episode.trackId.toString(),
-        trackName: episode.trackName,
-        description: episode.description,
-        releaseDate: moment(episode.releaseDate).format("D/M/YYYY"),
-        trackTime: moment
-          .duration(episode.trackTimeMillis, "milliseconds")
-          .format("hh:mm:ss"),
-        episodeUrl: episode.episodeUrl,
-        episodeType: `${episode?.episodeContentType}/${episode?.episodeFileExtension}`,
-      }));
-      if (episodes?.length) writeToLocalStorage(config.url, episodes);
+        if (feedLocalStorageValue) return feedLocalStorageValue.data;
 
-      if (!episodes?.length) dispatch(addErrorMessages("No episodes found!"));
+        const options = {
+          ignoreAttributes: false,
+          attributeNamePrefix: "attr_",
+        };
+        const xmlParser = new XMLParser(options);
+        const parsedFeedXml = await xmlParser.parse(feedXML);
 
-      return episodes;
+        const episodes = parsedFeedXml?.rss?.channel?.item?.map((episode) => ({
+          trackId: episode?.guid["#text"] || episode?.guid,
+          trackName: episode?.title,
+          description: episode?.description,
+          releaseDate: moment(episode?.pubDate).format("D/M/YYYY"),
+          trackTime:
+            typeof episode["itunes:duration"] === "number"
+              ? moment
+                  .duration(episode["itunes:duration"], "seconds")
+                  .format("hh:mm:ss")
+              : episode["itunes:duration"],
+          episodeUrl: episode?.enclosure?.attr_url,
+          episodeType: episode?.enclosure?.attr_type,
+        }));
+
+        if (episodes?.length) writeToLocalStorage(feedUrl, episodes);
+
+        if (!episodes?.length) dispatch(addErrorMessages("No episodes found!"));
+
+        return episodes || [];
+      } else {
+        const { config, data, localStorageValue } = await getPodcastEpisodes(
+          podcastId
+        );
+
+        if (localStorageValue) return localStorageValue.data;
+
+        // Remove first item (it's not a episode)
+        data?.results?.shift();
+
+        const episodes = data?.results?.map((episode) => ({
+          trackId: episode.trackId.toString(),
+          trackName: episode.trackName,
+          description: episode.description,
+          releaseDate: moment(episode.releaseDate).format("D/M/YYYY"),
+          trackTime: moment
+            .duration(episode.trackTimeMillis, "milliseconds")
+            .format("hh:mm:ss"),
+          episodeUrl: episode.episodeUrl,
+          episodeType: `${episode?.episodeContentType}/${episode?.episodeFileExtension}`,
+        }));
+        if (episodes?.length) writeToLocalStorage(config.url, episodes);
+
+        if (!episodes?.length) dispatch(addErrorMessages("No episodes found!"));
+
+        return episodes || [];
+      }
     } catch (error) {
       console.log(error);
       dispatch(addErrorMessages(error.message));
