@@ -17,6 +17,8 @@ const initialState = {
   episodes: [],
   isLoadingPodcasts: false,
   isLoadingEpisodes: false,
+  isLoadedPodcasts: false,
+  isLoadedEpisodes: false,
   hasError: false,
 };
 
@@ -177,10 +179,12 @@ export const podcastsReducer = createSlice({
     });
     builder.addCase(getPodcastsList.fulfilled, (state, { payload }) => {
       state.isLoadingPodcasts = false;
+      state.isLoadedPodcasts = true;
       state.podcasts = payload;
     });
     builder.addCase(getPodcastsList.rejected, (state, { payload }) => {
       state.isLoadingPodcasts = false;
+      state.isLoadedPodcasts = true;
       state.hasError = true;
     });
     builder.addCase(getPodcastEpisodesList.pending, (state) => {
@@ -188,11 +192,13 @@ export const podcastsReducer = createSlice({
     });
     builder.addCase(getPodcastEpisodesList.fulfilled, (state, { payload }) => {
       state.isLoadingEpisodes = false;
+      state.isLoadedEpisodes = true;
       state.episodes = payload;
       if (!payload || !payload.length) state.hasError = true;
     });
     builder.addCase(getPodcastEpisodesList.rejected, (state, { payload }) => {
       state.isLoadingEpisodes = false;
+      state.isLoadedEpisodes = true;
       state.hasError = true;
     });
   },

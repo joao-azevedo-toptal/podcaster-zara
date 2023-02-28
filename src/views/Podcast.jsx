@@ -1,19 +1,31 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { addErrorMessages } from "../store/notificationsReducer";
 import { getPodcastsList, selectPodcastById } from "../store/podcastsReducer";
 
 export default function Podcast() {
   const { podcastId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const podcast = useSelector((state) => selectPodcastById(state, podcastId));
 
   const podcasts = useSelector((state) => state.podcasts.podcasts);
-  const dispatch = useDispatch();
+  const isLoaded = useSelector((state) => state.podcasts.isLoadedPodcasts);
 
   useEffect(() => {
     // Simple way to allow to refresh on this route
     if (!podcasts || !podcasts.length) dispatch(getPodcastsList());
   }, []);
+
+  useEffect(() => {
+    if (isLoaded && !podcast) {
+      dispatch(addErrorMessages("Podcast not found!"));
+      // Go to homepage when there is an error
+      navigate("/");
+    }
+  }, [isLoaded]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-8 gap-14">

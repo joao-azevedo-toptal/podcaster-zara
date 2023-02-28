@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import WarningIcon from "../components/WarningIcon";
+import { addErrorMessages } from "../store/notificationsReducer";
 import {
   getPodcastEpisodesList,
   selectPodcastEpisodeById,
@@ -9,19 +10,29 @@ import {
 
 export default function Episode() {
   const { podcastId, episodeId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const episode = useSelector((state) =>
     selectPodcastEpisodeById(state, episodeId)
   );
 
   const episodes = useSelector((state) => state.podcasts.episodes);
-  const dispatch = useDispatch();
+  const isLoaded = useSelector((state) => state.podcasts.isLoadedEpisodes);
 
   useEffect(() => {
     // Simple way to allow to refresh on this route
     if (!episodes || !episodes.length)
       dispatch(getPodcastEpisodesList(podcastId));
   }, []);
+
+  useEffect(() => {
+    if (isLoaded && !episode) {
+      dispatch(addErrorMessages("Episode not found!"));
+      // Go to homepage when there is an error
+      navigate("/");
+    }
+  }, [isLoaded]);
 
   return (
     <>

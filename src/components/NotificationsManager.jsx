@@ -13,7 +13,7 @@ export default function NotificationsManager() {
   useEffect(() => {
     if (hasError) {
       dispatch(clearHasError());
-      // Go to homepage when ther is an error
+      // Go to homepage when there is an error
       navigate("/");
     }
   }, [hasError]);
