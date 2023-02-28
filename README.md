@@ -32,7 +32,9 @@ To run the project in production, follow these steps:
 
 ### Tests
 
-To run the unit tests run `npm run test`
+To run the vitest tests run `npm run test`
+
+To run the cypress tests run `npm run cypress:open`
 
 ## Tools
 
@@ -43,18 +45,28 @@ Some of the tools used in this project are:
 - Redux for state management
 - Axios for requests handling
 - Tailwind for styling
-- Vitest for unit tests
+- Vitest and Cypress for tests
 
 For a more detailed list take a look at the `package.json`
 
-## Mobile Support
+## Notes
 
-The web app is compatible with devices of all sizes.
+There are two methods of getting the episodes implemented, from the podcast details endpoint (which doesn't seem to have a way to return all the episodes for the podcast and doesn't seem to return HTML for the description) and from the feed URL (which in some cases doesn't have all the info of a podcast but can't confirm this being an issue on the XML feed because only got a few incomplete that was beyond the limit that the endpoint has).
 
 ## Screenshots
+
+### Desktop
 
 ![Podcasts](./images/podcasts.png)
 
 ![Episodes List](./images/episode-list.png)
 
 ![Episode Details](./images/episode-details.png)
+
+## Mobile
+
+<img src="./images/podcasts-mobile.png" alt="Podcasts" width="430">
+
+<img src="./images/episode-list-mobile.png" alt="Episodes List" width="430">
+
+<img src="./images/episode-details-mobile.png" alt="Episode Details" width="430">
