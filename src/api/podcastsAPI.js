@@ -1,7 +1,9 @@
 import axios from "axios";
 import { readFromLocalStorage } from "../utils/localStorage";
 
-const baseUrl = "https://itunes.apple.com";
+const corsUrl = "https://cors-anywhere.herokuapp.com/";
+
+const baseUrl = corsUrl + "https://itunes.apple.com";
 
 export const getPodcasts = () => {
   const url = axios.getUri({
@@ -38,9 +40,10 @@ export const getPodcastEpisodesInfo = (id) => {
 };
 
 export const getPodcastFeedUrlResultsInXML = (feedUrl) => {
-  const localStorageValue = readFromLocalStorage(feedUrl);
+  const url = corsUrl + feedUrl;
+  const localStorageValue = readFromLocalStorage(url);
   if (localStorageValue)
     return new Promise((resolve, _reject) => resolve({ localStorageValue }));
 
-  return axios.get(feedUrl);
+  return axios.get(url);
 };

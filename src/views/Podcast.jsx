@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import { addErrorMessages } from "../store/notificationsReducer";
 import { getPodcastsList, selectPodcastById } from "../store/podcastsReducer";
 
@@ -35,11 +35,22 @@ export default function Podcast() {
             className="card max-w-xs mx-auto lg:max-w-none lg:mx-0"
             data-testid="podcast-details-sidebar"
           >
-            <img className="rounded mx-auto" src={podcast?.image} />
+            <Link to={`/podcast/${podcastId}`}>
+              <img className="rounded mx-auto" src={podcast?.image} />
+            </Link>
+
             <hr className="my-5" />
-            <div className="font-bold">{podcast?.name}</div>
+            <Link to={`/podcast/${podcastId}`} className="hover:text-blue-500">
+              <div className="font-bold">{podcast?.name}</div>
+            </Link>
             <div className="italic text-sm text-neutral-700">
-              by {podcast?.artist}
+              by{" "}
+              <Link
+                to={`/podcast/${podcastId}`}
+                className="hover:text-blue-500"
+              >
+                {podcast?.artist}
+              </Link>
             </div>
             <hr className="my-5" />
             <div className="font-bold text-sm">Description:</div>

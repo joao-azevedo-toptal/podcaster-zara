@@ -1,10 +1,14 @@
 import moment from "moment";
 
 export const writeToLocalStorage = (url, data) => {
-  localStorage.setItem(
-    url,
-    JSON.stringify({ data, expiryDate: moment().add(1, "day").valueOf() })
-  );
+  try {
+    localStorage.setItem(
+      url,
+      JSON.stringify({ data, expiryDate: moment().add(1, "day").valueOf() })
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const readFromLocalStorage = (url) => {
