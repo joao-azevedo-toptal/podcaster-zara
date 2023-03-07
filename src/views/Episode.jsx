@@ -38,11 +38,17 @@ export default function Episode() {
     <>
       {episode && (
         <div className="card" data-testid="episode-details-card">
-          <div className="text-3xl font-semibold">
-            {episode?.trackName || (
-              <WarningIcon className="text-red-500 w-7 h-7" />
-            )}
-          </div>
+          {episode?.trackName ? (
+            <div
+              className="text-3xl font-semibold"
+              dangerouslySetInnerHTML={{
+                __html: episode.trackName,
+              }}
+            ></div>
+          ) : (
+            <WarningIcon className="text-red-500 w-7 h-7" />
+          )}
+
           {episode?.description ? (
             <div
               className="html-description whitespace-pre-line py-3 text-sm text-neutral-700"

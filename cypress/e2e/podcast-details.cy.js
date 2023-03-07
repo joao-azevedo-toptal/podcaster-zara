@@ -2,6 +2,7 @@
 
 describe("podcast details page", () => {
   beforeEach(() => {
+    indexedDB.deleteDatabase("localforage");
     cy.intercept(
       "https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json",
       { fixture: "podcast-request.json" }
@@ -67,6 +68,23 @@ describe("podcast details page", () => {
           "Tune into Joe Budden and his friends. Follow along the crazy adventures of these very random friends."
         );
     });
+
+    it("should show the podcast details links", () => {
+      cy.get('[data-testid="podcast-details-sidebar-image"]').should("exist");
+      cy.get('[data-testid="podcast-details-sidebar-name"]').should("exist");
+      cy.get('[data-testid="podcast-details-sidebar-artist"]').should("exist");
+    });
+
+    it("is redirected to the podcast details page", () => {
+      cy.get('[data-testid="podcast-details-sidebar-image"]')
+        .should("exist")
+        .click();
+
+      cy.url().should(
+        "be.equal",
+        `${Cypress.config("baseUrl")}/podcast/1535809341`
+      );
+    });
   });
 
   describe("episodes list", () => {
@@ -103,9 +121,7 @@ describe("podcast details page", () => {
 
       cy.url().should(
         "be.equal",
-        `${Cypress.config(
-          "baseUrl"
-        )}/podcast/1535809341/episode/333e2c4d-bc72-4a6a-9b7e-e0bd859d08b5`
+        `${Cypress.config("baseUrl")}/podcast/1535809341/episode/411`
       );
     });
   });

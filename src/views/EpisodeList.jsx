@@ -52,22 +52,19 @@ export default function EpisodeList() {
                       <td className="px-6 py-4">
                         {episode.trackId ? (
                           <Link
-                            to={`episode/${encodeURIComponent(
-                              episode.trackId
-                            )}`}
+                            to={`episode/${episode.trackId}`}
                             className="font-medium text-blue-600 hover:underline"
                             data-testid="episodes-list-table-link"
-                          >
-                            {episode.trackName || (
-                              <WarningIcon className="text-red-500" />
-                            )}
-                          </Link>
+                            dangerouslySetInnerHTML={{
+                              __html: episode.trackName,
+                            }}
+                          ></Link>
                         ) : (
-                          <>
-                            {episode.trackName || (
-                              <WarningIcon className="text-red-500" />
-                            )}
-                          </>
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: episode.trackName,
+                            }}
+                          ></span>
                         )}
                       </td>
                       <td className="px-6 py-4">

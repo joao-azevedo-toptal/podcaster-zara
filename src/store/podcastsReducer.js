@@ -7,7 +7,7 @@ import {
 } from "../api/podcastsAPI";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
-import { writeToLocalStorage } from "../utils/localStorage";
+import { writeToLocalForage } from "../utils/forage";
 import { addErrorMessages } from "./notificationsReducer";
 import { XMLParser } from "fast-xml-parser";
 momentDurationFormatSetup(moment);
@@ -33,9 +33,9 @@ export const getPodcastsList = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       dispatch(resetPodcasts());
-      const { config, data, localStorageValue } = await getPodcasts();
+      const { config, data, localForageValue } = await getPodcasts();
 
-      if (localStorageValue) return localStorageValue.data;
+      if (localForageValue) return localForageValue.data;
 
       const podcasts = data?.feed?.entry?.map((podcast) => ({
         id: podcast.id.attributes["im:id"],
@@ -44,7 +44,7 @@ export const getPodcastsList = createAsyncThunk(
         summary: podcast.summary.label,
         artist: podcast["im:artist"].label,
       }));
-      writeToLocalStorage(config.url, podcasts);
+      writeToLocalForage(config.url, podcasts);
 
       return podcasts;
     } catch (error) {
@@ -71,21 +71,25 @@ export const getPodcastEpisodesList = createAsyncThunk(
       dispatch(resetEpisodes());
       const state = getState();
       if (state.app.useFeedUrl) {
-        const { config, data, localStorageValue } =
-          await getPodcastEpisodesInfo(podcastId);
+        const { config, data, localForageValue } = await getPodcastEpisodesInfo(
+          podcastId
+        );
 
         const feedUrl =
-          data?.results[0]?.feedUrl || localStorageValue?.data?.feedUrl;
-        if (!localStorageValue && feedUrl) {
-          writeToLocalStorage(config.url, { feedUrl });
+          data?.results[0]?.feedUrl || localForageValue?.data?.feedUrl;
+        if (!localForageValue && feedUrl) {
+          writeToLocalForage(config.url, { feedUrl });
         }
 
         if (!feedUrl) throw Error("Error geting the feed URL!");
 
-        const { data: feedXML, localStorageValue: feedLocalStorageValue } =
-          await getPodcastFeedUrlResultsInXML(feedUrl);
+        const {
+          config: feedConfig,
+          data: feedXML,
+          localForageValue: feedLocalForageValue,
+        } = await getPodcastFeedUrlResultsInXML(feedUrl);
 
-        if (feedLocalStorageValue) return feedLocalStorageValue.data;
+        if (feedLocalForageValue) return feedLocalForageValue.data;
 
         const options = {
           ignoreAttributes: false,
@@ -94,32 +98,37 @@ export const getPodcastEpisodesList = createAsyncThunk(
         const xmlParser = new XMLParser(options);
         const parsedFeedXml = await xmlParser.parse(feedXML);
 
-        const episodes = parsedFeedXml?.rss?.channel?.item?.map((episode) => ({
-          trackId: episode?.guid["#text"] || episode?.guid,
-          trackName: episode?.title,
-          description: episode?.description,
-          releaseDate: moment(episode?.pubDate).format("D/M/YYYY"),
-          trackTime:
-            typeof episode["itunes:duration"] === "number"
-              ? moment
-                  .duration(episode["itunes:duration"], "seconds")
-                  .format("hh:mm:ss")
-              : episode["itunes:duration"],
-          episodeUrl: episode?.enclosure?.attr_url,
-          episodeType: episode?.enclosure?.attr_type,
-        }));
+        const episodes = parsedFeedXml?.rss?.channel?.item
+          ?.reverse()
+          ?.map((episode, index) => ({
+            // Use index + 1 as id to avoid random formats in the XML
+            trackId: (index + 1).toString(),
+            trackName: episode?.title,
+            description: episode?.description,
+            releaseDate: moment(episode?.pubDate).format("D/M/YYYY"),
+            trackTime:
+              typeof episode["itunes:duration"] === "number"
+                ? moment
+                    .duration(episode["itunes:duration"], "seconds")
+                    .format("hh:mm:ss")
+                : episode["itunes:duration"],
+            episodeUrl: episode?.enclosure?.attr_url,
+            episodeType: episode?.enclosure?.attr_type,
+          }));
 
-        if (episodes?.length) writeToLocalStorage(feedUrl, episodes);
+        episodes?.reverse();
+
+        if (episodes?.length) writeToLocalForage(feedConfig.url, episodes);
 
         if (!episodes?.length) dispatch(addErrorMessages("No episodes found!"));
 
         return episodes || [];
       } else {
-        const { config, data, localStorageValue } = await getPodcastEpisodes(
+        const { config, data, localForageValue } = await getPodcastEpisodes(
           podcastId
         );
 
-        if (localStorageValue) return localStorageValue.data;
+        if (localForageValue) return localForageValue.data;
 
         // Remove first item (it's not a episode)
         data?.results?.shift();
@@ -135,7 +144,7 @@ export const getPodcastEpisodesList = createAsyncThunk(
           episodeUrl: episode.episodeUrl,
           episodeType: `${episode?.episodeContentType}/${episode?.episodeFileExtension}`,
         }));
-        if (episodes?.length) writeToLocalStorage(config.url, episodes);
+        if (episodes?.length) writeToLocalForage(config.url, episodes);
 
         if (!episodes?.length) dispatch(addErrorMessages("No episodes found!"));
 

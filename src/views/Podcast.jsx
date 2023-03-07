@@ -35,12 +35,19 @@ export default function Podcast() {
             className="card max-w-xs mx-auto lg:max-w-none lg:mx-0"
             data-testid="podcast-details-sidebar"
           >
-            <Link to={`/podcast/${podcastId}`}>
+            <Link
+              to={`/podcast/${podcastId}`}
+              data-testid="podcast-details-sidebar-image"
+            >
               <img className="rounded mx-auto" src={podcast?.image} />
             </Link>
 
             <hr className="my-5" />
-            <Link to={`/podcast/${podcastId}`} className="hover:text-blue-500">
+            <Link
+              to={`/podcast/${podcastId}`}
+              className="hover:text-blue-500"
+              data-testid="podcast-details-sidebar-name"
+            >
               <div className="font-bold">{podcast?.name}</div>
             </Link>
             <div className="italic text-sm text-neutral-700">
@@ -48,6 +55,7 @@ export default function Podcast() {
               <Link
                 to={`/podcast/${podcastId}`}
                 className="hover:text-blue-500"
+                data-testid="podcast-details-sidebar-artist"
               >
                 {podcast?.artist}
               </Link>
