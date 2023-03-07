@@ -100,7 +100,7 @@ describe("episode details page", () => {
       });
     });
 
-    it.only("should play and pause the audio", () => {
+    it("should play and pause the audio", () => {
       cy.get("audio")
         .should("have.prop", "paused", true)
         .and("have.prop", "ended", false)
