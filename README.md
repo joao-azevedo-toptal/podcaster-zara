@@ -40,12 +40,12 @@ To run the cypress tests run `npm run cypress:open`
 
 Some of the tools used in this project are:
 
-- React for the framework
-- Vite for the bundler
-- Redux for state management
-- Axios for requests handling
-- Tailwind for styling
-- Vitest and Cypress for tests
+- React `18.2` for the framework
+- Vite `4.1` for the bundler
+- Redux `1.9` for state management
+- Axios `1.3` for requests handling
+- Tailwind `3.2` for styling
+- Vitest `0.29` and Cypress `12.7` for tests
 
 For a more detailed list take a look at the `package.json`
 
