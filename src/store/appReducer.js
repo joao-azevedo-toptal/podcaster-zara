@@ -6,6 +6,10 @@ const initialState = {
     JSON.parse(localStorage.getItem("useApiInsteadOfFeedUrl")) || false,
   waitBeforeShowView:
     JSON.parse(localStorage.getItem("waitBeforeShowView")) || 200,
+  useDarkMode:
+    typeof JSON.parse(localStorage.getItem("useDarkMode")) === "boolean"
+      ? JSON.parse(localStorage.getItem("useDarkMode"))
+      : window.matchMedia("(prefers-color-scheme: dark)").matches,
 };
 
 export const appReducer = createSlice({
@@ -23,6 +27,10 @@ export const appReducer = createSlice({
       localStorage.setItem("waitBeforeShowView", JSON.stringify(payload));
       state.waitBeforeShowView = payload;
     },
+    setUseDarkMode: (state, { payload }) => {
+      localStorage.setItem("useDarkMode", JSON.stringify(payload));
+      state.useDarkMode = payload;
+    },
   },
 });
 
@@ -30,6 +38,7 @@ export const {
   setIsLoading,
   setUseApiInsteadOfFeedUrl,
   setWaitBeforeShowView,
+  setUseDarkMode,
 } = appReducer.actions;
 
 export default appReducer.reducer;

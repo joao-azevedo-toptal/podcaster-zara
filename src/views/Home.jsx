@@ -47,7 +47,7 @@ export default function Home() {
         />
       </div>
       {filteredPodcasts.length < 1 && (
-        <div className="font-bold text-3xl text-center mt-52">
+        <div className="font-bold text-3xl text-center mt-52 dark:text-neutral-100">
           No podcast results for "{query}"
         </div>
       )}

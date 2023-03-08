@@ -4,12 +4,20 @@
 
 @layer components {
   .card {
-    background-color: theme("colors.white");
-    border-radius: theme("borderRadius.DEFAULT");
-    padding: theme("spacing.5");
-    box-shadow: theme("boxShadow.DEFAULT");
+    @apply bg-white dark:bg-gray-700 rounded p-5 shadow;
   }
   .html-description a {
     @apply text-blue-600 hover:underline;
   }
+}
+
+html {
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  flex-grow: 1;
 }

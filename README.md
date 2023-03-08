@@ -55,7 +55,9 @@ For a more detailed list take a look at the `package.json`
 
 There are two methods of getting the episodes implemented, from the podcast details endpoint (which doesn't seem to have a way to return all the episodes for the podcast and doesn't seem to return HTML for the description) and from the feed URL (which in some cases doesn't have all the info of a podcast but can't confirm this being an issue on the XML feed because only got a few incomplete that was beyond the limit that the endpoint has).
 
-Localforage is used to try to avoid localStorage maximum size errors while saving. It will try to use IndexedDB, WebSQL or localStorage in this order.
+Localforage is used to try to avoid localStorage maximum size errors while saving. It will try to use IndexedDB, WebSQL, or localStorage in this order.
+
+The cog button in the header opens a small settings popover that allows changing the source of the episodes, the delay between routes, and toggling the dark theme.
 
 ## Screenshots
 

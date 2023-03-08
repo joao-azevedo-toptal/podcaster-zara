@@ -20,7 +20,7 @@ export default function Header() {
       >
         <Link
           to="/"
-          className="text-lg font-bold text-blue-700"
+          className="text-lg font-bold text-blue-500"
           data-testid="home-link"
         >
           Podcaster
@@ -31,7 +31,7 @@ export default function Header() {
           <Settings />
         </div>
       </header>
-      <hr />
+      <hr className="border-gray-200 dark:border-gray-900" />
     </>
   );
 }

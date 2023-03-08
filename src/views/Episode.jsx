@@ -42,7 +42,7 @@ export default function Episode() {
         <div className="card" data-testid="episode-details-card">
           {episode?.trackName ? (
             <div
-              className="text-3xl font-semibold"
+              className="text-3xl font-semibold dark:text-neutral-100"
               dangerouslySetInnerHTML={{
                 __html: episode.trackName,
               }}
@@ -53,13 +53,13 @@ export default function Episode() {
 
           {episode?.description ? (
             <div
-              className="html-description whitespace-pre-line py-3 text-sm text-neutral-700"
+              className="html-description whitespace-pre-line py-3 text-sm text-neutral-700 dark:text-neutral-300"
               dangerouslySetInnerHTML={{ __html: episode?.description }}
             />
           ) : (
             <WarningIcon className="text-red-500" />
           )}
-          <hr className="my-5" />
+          <hr className="border-gray-200 dark:border-gray-900 my-5" />
           {episode?.episodeUrl ? (
             <audio className="w-full" controls>
               <source src={episode?.episodeUrl} type={episode?.episodeType} />

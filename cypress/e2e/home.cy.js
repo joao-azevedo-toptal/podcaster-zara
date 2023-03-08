@@ -53,7 +53,8 @@ describe("home page", () => {
       cy.get('[data-testid="search-input"]')
         .type("Fake")
         .focus()
-        .should("have.class", "focus:border-red-500 focus:ring-red-500");
+        .should("have.class", "focus:border-red-500")
+        .should("have.class", "focus:ring-red-500");
       cy.get('[data-testid="badge"]')
         .should("have.class", "bg-red-500")
         .should("have.text", "0");

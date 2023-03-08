@@ -42,15 +42,15 @@ export default function Podcast() {
               <img className="rounded mx-auto" src={podcast?.image} />
             </Link>
 
-            <hr className="my-5" />
+            <hr className=" border-gray-200 dark:border-gray-900 my-5" />
             <Link
               to={`/podcast/${podcastId}`}
-              className="hover:text-blue-500"
+              className="hover:text-blue-500 dark:text-neutral-100 dark:hover:text-blue-500"
               data-testid="podcast-details-sidebar-name"
             >
               <div className="font-bold">{podcast?.name}</div>
             </Link>
-            <div className="italic text-sm text-neutral-700">
+            <div className="italic text-sm text-neutral-700 dark:text-neutral-300 ">
               by{" "}
               <Link
                 to={`/podcast/${podcastId}`}
@@ -60,9 +60,11 @@ export default function Podcast() {
                 {podcast?.artist}
               </Link>
             </div>
-            <hr className="my-5" />
-            <div className="font-bold text-sm">Description:</div>
-            <div className="italic text-sm text-neutral-700">
+            <hr className=" border-gray-200 dark:border-gray-900 my-5" />
+            <div className="font-bold text-sm dark:text-neutral-100 ">
+              Description:
+            </div>
+            <div className="italic text-sm text-neutral-700 dark:text-neutral-300">
               {podcast?.summary}
             </div>
           </div>

@@ -22,7 +22,7 @@ export default function EpisodeList() {
       {episodes?.length > 0 && (
         <>
           <div
-            className="card text-2xl font-bold"
+            className="card text-2xl font-bold dark:text-neutral-100"
             data-testid="episodes-list-counter"
           >
             Episodes: {episodes.length}
@@ -30,10 +30,10 @@ export default function EpisodeList() {
           <div className="card mt-7">
             <div className="relative overflow-x-auto">
               <table
-                className="w-full text-sm text-left text-neutral-700"
+                className="w-full text-sm text-left text-neutral-700 dark:text-neutral-300"
                 data-testid="episodes-list-table"
               >
-                <thead className="border-b text-xs text-gray-700">
+                <thead className="border-b dark:border-gray-900 text-xs text-gray-700 dark:text-neutral-100">
                   <tr>
                     <th scope="col" className="px-6 py-3">
                       Title
@@ -49,7 +49,7 @@ export default function EpisodeList() {
                 <tbody>
                   {episodes.map((episode) => (
                     <tr
-                      className="border-b bg-white odd:bg-gray-100"
+                      className="border-b dark:border-gray-900 bg-white odd:bg-gray-100 dark:bg-gray-700 dark:odd:bg-gray-800"
                       key={episode.trackId}
                       data-testid="episodes-list-table-row"
                     >
