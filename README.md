@@ -57,7 +57,9 @@ There are two methods of getting the episodes implemented, from the podcast deta
 
 Localforage is used to try to avoid localStorage maximum size errors while saving. It will try to use IndexedDB, WebSQL, or localStorage in this order.
 
-The cog button in the header opens a small settings popover that allows changing the source of the episodes, the delay between routes, and toggling the dark theme.
+The cog button in the header opens a small settings popover that allows changing the source of the episodes, the delay between routes, toggling the dark theme, and clearing all local storage.
+
+**Visit https://cors-anywhere.herokuapp.com/corsdemo and click on the "Request temporary access to the demo server" button when having CORS errors because it may have expired.**
 
 ## Screenshots
 
