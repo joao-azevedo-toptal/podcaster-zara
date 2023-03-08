@@ -5,9 +5,11 @@ import {
   setUseDarkMode,
   setWaitBeforeShowView,
 } from "../store/appReducer";
+import { clearAllStorage } from "../utils/forage";
 import CogIcon from "./CogIcon";
 import MoonIcon from "./MoonIcon";
 import SunIcon from "./SunIcon";
+import TrashIcon from "./TrashIcon";
 
 export default function Settings() {
   const dispatch = useDispatch();
@@ -120,7 +122,7 @@ export default function Settings() {
                 </div>
               </li>
               <li>
-                <div className="flex gap-3 items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                <div className="flex gap-3 items-center justify-between p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                   <div className="font-medium text-gray-900 dark:text-gray-300">
                     <div>Dark mode</div>
                     <p
@@ -136,6 +138,26 @@ export default function Settings() {
                     onClick={toggleDarkMode}
                   >
                     {useDarkMode ? <SunIcon /> : <MoonIcon />}
+                  </button>
+                </div>
+              </li>
+              <li>
+                <div className="flex gap-3 items-center justify-between p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                  <div className="font-medium text-gray-900 dark:text-gray-300">
+                    <div>Clear all storage</div>
+                    <p
+                      id="helper-checkbox-text-1"
+                      className="text-xs font-normal text-gray-500 dark:text-gray-300"
+                    >
+                      Clear all data stored locally.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-neutral-100 hover:text-blue-500 dark:hover:text-blue-500 rounded-lg focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-900 p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 inline-flex h-8 w-8"
+                    onClick={clearAllStorage}
+                  >
+                    <TrashIcon />
                   </button>
                 </div>
               </li>

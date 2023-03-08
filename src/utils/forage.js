@@ -24,8 +24,9 @@ export const readFromLocalForage = async (url) => {
   }
 };
 
-export const clearLocalForage = async () => {
+export const clearAllStorage = async () => {
   try {
+    localStorage.clear();
     await localforage.clear();
   } catch (error) {
     console.log(error);
