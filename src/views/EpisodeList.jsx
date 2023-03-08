@@ -9,9 +9,13 @@ export default function EpisodeList() {
   const episodes = useSelector((state) => state.podcasts.episodes);
   const dispatch = useDispatch();
 
+  const useApiInsteadOfFeedUrl = useSelector(
+    (state) => state.app.useApiInsteadOfFeedUrl
+  );
+
   useEffect(() => {
     dispatch(getPodcastEpisodesList(podcastId));
-  }, []);
+  }, [useApiInsteadOfFeedUrl]);
 
   return (
     <>

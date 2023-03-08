@@ -121,7 +121,7 @@ describe("podcast details page", () => {
 
       cy.url().should(
         "be.equal",
-        `${Cypress.config("baseUrl")}/podcast/1535809341/episode/411`
+        `${Cypress.config("baseUrl")}/podcast/1535809341/episode/1`
       );
     });
   });

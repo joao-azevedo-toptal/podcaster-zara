@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Settings from "./Settings";
 import Spinner from "./Spinner";
 
 export default function Header() {
@@ -25,7 +26,10 @@ export default function Header() {
           Podcaster
         </Link>
 
-        {(isLoadingData || isLoadingRoutes) && <Spinner />}
+        <div className="flex items-center">
+          {(isLoadingData || isLoadingRoutes) && <Spinner />}
+          <Settings />
+        </div>
       </header>
       <hr />
     </>

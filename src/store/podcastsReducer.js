@@ -70,7 +70,7 @@ export const getPodcastEpisodesList = createAsyncThunk(
     try {
       dispatch(resetEpisodes());
       const state = getState();
-      if (state.app.useFeedUrl) {
+      if (!state.app.useApiInsteadOfFeedUrl) {
         const { config, data, localForageValue } = await getPodcastEpisodesInfo(
           podcastId
         );
@@ -98,9 +98,8 @@ export const getPodcastEpisodesList = createAsyncThunk(
         const xmlParser = new XMLParser(options);
         const parsedFeedXml = await xmlParser.parse(feedXML);
 
-        const episodes = parsedFeedXml?.rss?.channel?.item
-          ?.reverse()
-          ?.map((episode, index) => ({
+        const episodes = parsedFeedXml?.rss?.channel?.item?.map(
+          (episode, index) => ({
             // Use index + 1 as id to avoid random formats in the XML
             trackId: (index + 1).toString(),
             trackName: episode?.title,
@@ -114,9 +113,8 @@ export const getPodcastEpisodesList = createAsyncThunk(
                 : episode["itunes:duration"],
             episodeUrl: episode?.enclosure?.attr_url,
             episodeType: episode?.enclosure?.attr_type,
-          }));
-
-        episodes?.reverse();
+          })
+        );
 
         if (episodes?.length) writeToLocalForage(feedConfig.url, episodes);
 
@@ -133,8 +131,9 @@ export const getPodcastEpisodesList = createAsyncThunk(
         // Remove first item (it's not a episode)
         data?.results?.shift();
 
-        const episodes = data?.results?.map((episode) => ({
-          trackId: episode.trackId.toString(),
+        const episodes = data?.results?.map((episode, index) => ({
+          // Replace actual trackId by index to allow switching between API and feed URL episodes
+          trackId: (index + 1).toString(),
           trackName: episode.trackName,
           description: episode.description,
           releaseDate: moment(episode.releaseDate).format("D/M/YYYY"),
@@ -185,6 +184,7 @@ export const podcastsReducer = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getPodcastsList.pending, (state) => {
       state.isLoadingPodcasts = true;
+      state.isLoadedPodcasts = false;
     });
     builder.addCase(getPodcastsList.fulfilled, (state, { payload }) => {
       state.isLoadingPodcasts = false;
@@ -198,6 +198,7 @@ export const podcastsReducer = createSlice({
     });
     builder.addCase(getPodcastEpisodesList.pending, (state) => {
       state.isLoadingEpisodes = true;
+      state.isLoadedEpisodes = false;
     });
     builder.addCase(getPodcastEpisodesList.fulfilled, (state, { payload }) => {
       state.isLoadingEpisodes = false;

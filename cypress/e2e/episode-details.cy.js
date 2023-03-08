@@ -13,7 +13,7 @@ describe("episode details page", () => {
     cy.intercept("https://jbpod.libsyn.com/applepodcast", {
       fixture: "rss-feed-request.xml",
     }).as("rss-feed");
-    cy.visit("/podcast/1535809341/episode/411");
+    cy.visit("/podcast/1535809341/episode/1");
     cy.wait("@podcasts");
     cy.wait("@podcast-details");
     cy.wait("@rss-feed");

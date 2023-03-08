@@ -13,18 +13,20 @@ export default function Episode() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const useApiInsteadOfFeedUrl = useSelector(
+    (state) => state.app.useApiInsteadOfFeedUrl
+  );
+
   const episode = useSelector((state) =>
     selectPodcastEpisodeById(state, episodeId)
   );
 
-  const episodes = useSelector((state) => state.podcasts.episodes);
   const isLoaded = useSelector((state) => state.podcasts.isLoadedEpisodes);
 
   useEffect(() => {
     // Simple way to allow to refresh on this route
-    if (!episodes || !episodes.length)
-      dispatch(getPodcastEpisodesList(podcastId));
-  }, []);
+    dispatch(getPodcastEpisodesList(podcastId));
+  }, [useApiInsteadOfFeedUrl]);
 
   useEffect(() => {
     if (isLoaded && !episode) {
